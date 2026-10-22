@@ -8,6 +8,9 @@ dependencies = ["pybullet>=3.2.6"]
 [project.scripts]
 conveyor = "conveyor.cli:main"
 
+[dependency-groups]
+report = ["matplotlib>=3.8"]
+
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"

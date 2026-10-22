@@ -16,7 +16,7 @@ def spark(values, limit):
     return out
 
 
-def render(name, t, setpoint, speed, torque, max_torque, boxes, history, duty=None):
+def render(name, t, setpoint, speed, voltage, vmax, current, torque, boxes, history, duty=None):
     limit = max(setpoint * 1.5, 0.1)
     lines = [
         f"Conveyor Motor Speed Control   controller={name}   t={t:6.2f}s",
@@ -24,7 +24,9 @@ def render(name, t, setpoint, speed, torque, max_torque, boxes, history, duty=No
         f"setpoint  {setpoint:6.3f} m/s",
         f"speed     {speed:6.3f} m/s  {bar(speed, limit)}",
         f"error     {setpoint - speed:+6.3f} m/s",
-        f"torque    {torque:6.3f} N.m  {bar(torque, max_torque)}",
+        f"voltage   {voltage:6.2f} V    {bar(voltage, vmax)}",
+        f"current   {current:6.2f} A",
+        f"torque    {torque:6.2f} N.m",
         f"duty      {'-' if duty is None else f'{duty * 100:5.1f} %'}",
         f"boxes     {boxes} on belt",
         "",

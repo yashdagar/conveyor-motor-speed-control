@@ -4,8 +4,7 @@ import tempfile
 import pybullet as p
 import pybullet_data
 
-DT = 1 / 240
-MAX_TORQUE = 4.0
+DT = 1 / 1000
 
 
 def roller_urdf(n, radius, spacing, width, mass):
@@ -30,11 +29,14 @@ def roller_urdf(n, radius, spacing, width, mass):
 
 class Conveyor:
     def __init__(self, gui=False, rollers=10, radius=0.05, spacing=0.12, width=0.4,
-                 roller_mass=2.0, damping=0.02, boxes=3, box_mass=1.0, box_size=0.2):
+                 roller_mass=2.0, damping=0.02, boxes=3, box_mass=1.0, box_size=0.2, load_at=0.0):
         self.radius = radius
         self.damping = damping
         self.length = (rollers - 1) * spacing
         self.box_half = box_size / 2
+        self.pending = boxes
+        self.box_mass = box_mass
+        self.load_at = load_at
         self.client = p.connect(p.GUI if gui else p.DIRECT)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         p.setGravity(0, 0, -9.81)
@@ -43,26 +45,35 @@ class Conveyor:
         path = os.path.join(tempfile.gettempdir(), "conveyor.urdf")
         with open(path, "w") as f:
             f.write(roller_urdf(rollers, radius, spacing, width, roller_mass))
-        self.body = p.loadURDF(path, useFixedBase=True)
+        self.body = p.loadURDF(path, useFixedBase=True, flags=p.URDF_USE_INERTIA_FROM_FILE)
         self.joints = list(range(rollers))
         p.setJointMotorControlArray(self.body, self.joints, p.VELOCITY_CONTROL, forces=[0] * rollers)
         for j in self.joints:
             p.changeDynamics(self.body, j, lateralFriction=1.0, linearDamping=0, angularDamping=0)
-        col = p.createCollisionShape(p.GEOM_BOX, halfExtents=[self.box_half] * 3)
-        vis = p.createVisualShape(p.GEOM_BOX, halfExtents=[self.box_half] * 3, rgbaColor=[0.85, 0.55, 0.2, 1])
+        self.col = p.createCollisionShape(p.GEOM_BOX, halfExtents=[self.box_half] * 3)
+        self.vis = p.createVisualShape(p.GEOM_BOX, halfExtents=[self.box_half] * 3, rgbaColor=[0.85, 0.55, 0.2, 1])
         self.boxes = []
-        for i in range(boxes):
-            x = self.length * (i + 0.5) / boxes
-            b = p.createMultiBody(box_mass, col, vis, [x, 0, 2 * radius + self.box_half + 0.01])
-            p.changeDynamics(b, -1, lateralFriction=1.0)
-            self.boxes.append(b)
         if gui:
             p.resetDebugVisualizerCamera(1.8, 50, -30, [self.length / 2, 0, 0.1])
         self.time = 0.0
+        self.spawn()
+
+    def spawn(self):
+        if self.pending == 0 or self.time < self.load_at:
+            return
+        for i in range(self.pending):
+            x = self.length * (i + 0.5) / self.pending
+            b = p.createMultiBody(self.box_mass, self.col, self.vis, [x, 0, 2 * self.radius + self.box_half + 0.01])
+            p.changeDynamics(b, -1, lateralFriction=1.0)
+            self.boxes.append(b)
+        self.pending = 0
+
+    def omega(self):
+        states = p.getJointStates(self.body, self.joints)
+        return sum(s[1] for s in states) / len(states)
 
     def speed(self):
-        states = p.getJointStates(self.body, self.joints)
-        return sum(s[1] for s in states) / len(states) * self.radius
+        return self.omega() * self.radius
 
     def step(self, torque):
         states = p.getJointStates(self.body, self.joints)
@@ -71,6 +82,7 @@ class Conveyor:
         p.setJointMotorControlArray(self.body, self.joints, p.TORQUE_CONTROL, forces=forces)
         p.stepSimulation()
         self.time += DT
+        self.spawn()
         self.recycle()
 
     def recycle(self):
