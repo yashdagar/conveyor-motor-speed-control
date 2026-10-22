@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="module-map-title module-map-desc" id="module-map-root">
+        <title id="module-map-title">How the modules fit together</title>
+        <desc id="module-map-desc">Module map of the conveyor package: the command-line entry point runs the loop and calls the controllers, the DC motor model, the dashboard and the metrics, the motor drives the PyBullet conveyor, and the report figure script reuses the same loop to run every experiment.</desc>
+        <defs>
+      <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Serif:ital@0;1&amp;family=Noto+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@400&amp;family=Noto+Sans+TC:wght@400;500;600&amp;family=Noto+Serif+TC:wght@400&amp;display=swap');
+      #module-map-root { --color-paper:   #faf8f3;
+      --color-ink:     #22272e;
+      --color-muted:   #5c6670;
+      --color-accent:  #0f766e;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace; }
+      #module-map-root { font-family: var(--font-sans); color: var(--color-ink); }
+      #module-map-root .diagram-container { width: 100%; overflow-x: auto; }
+      @media print {
+#module-map-root .diagram-container { overflow-x: visible; }
+}</style>
+          <marker id="module-map-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5c6670"/></marker>
+          <marker id="module-map-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0f766e"/></marker>
+          <marker id="module-map-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1d4ed8"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#faf8f3"/>
+
+        <!-- Zones (before arrows and nodes) -->
+        <rect x="40" y="56" width="712" height="416" rx="8" fill="#22272e" stroke="#22272e" stroke-width="0.8" fill-opacity="0.02" stroke-opacity="0.10"/>
+        <rect x="52" y="60" width="124" height="12" rx="2" fill="#faf8f3"/>
+        <text x="114" y="69" fill="#566070" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">CONVEYOR PACKAGE</text>
+
+        <rect x="768" y="200" width="168" height="128" rx="8" fill="#22272e" stroke="#22272e" stroke-width="0.8" fill-opacity="0.02" stroke-opacity="0.10"/>
+        <rect x="780" y="204" width="52" height="12" rx="2" fill="#faf8f3"/>
+        <text x="806" y="213" fill="#566070" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.14em">REPORT</text>
+
+        <!-- Arrows first. Four fanned ports on the bottom edge of cli.py at x = 428, 464, 496, 532 -->
+        <path d="M 428,160 V 192 Q 428,200 420,200 H 140 Q 132,200 132,208 V 240"
+              fill="none" stroke="#5c6670" stroke-width="1.2" marker-end="url(#module-map-arrow)"/>
+        <path d="M 464,160 V 208 Q 464,216 456,216 H 308 Q 300,216 300,224 V 240"
+              fill="none" stroke="#5c6670" stroke-width="1.2" marker-end="url(#module-map-arrow)"/>
+        <line x1="496" y1="160" x2="496" y2="240" stroke="#0f766e" stroke-width="1.4" marker-end="url(#module-map-arrow-accent)"/>
+        <path d="M 532,160 V 192 Q 532,200 540,200 H 628 Q 636,200 636,208 V 240"
+              fill="none" stroke="#5c6670" stroke-width="1.2" marker-end="url(#module-map-arrow)"/>
+        <line x1="636" y1="304" x2="636" y2="384" stroke="#5c6670" stroke-width="1.2" marker-end="url(#module-map-arrow)"/>
+        <!-- figures.py reuses the loop: up and over into the right edge of cli.py -->
+        <path d="M 852,240 V 136 Q 852,128 844,128 H 568"
+              fill="none" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#module-map-arrow)"/>
+
+        <!-- Arrow labels -->
+        <rect x="250" y="180" width="60" height="12" rx="2" fill="#faf8f3"/>
+        <text x="280" y="189" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">AT THE END</text>
+        <rect x="350" y="224" width="64" height="12" rx="2" fill="#faf8f3"/>
+        <text x="382" y="233" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">EVERY 0.1 S</text>
+        <rect x="504" y="212" width="40" height="12" rx="2" fill="#faf8f3"/>
+        <text x="524" y="221" fill="#0f766e" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SPEED</text>
+        <rect x="560" y="180" width="52" height="12" rx="2" fill="#faf8f3"/>
+        <text x="586" y="189" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">VOLTAGE</text>
+        <rect x="644" y="338" width="44" height="12" rx="2" fill="#faf8f3"/>
+        <text x="666" y="347" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">TORQUE</text>
+        <rect x="860" y="178" width="32" height="12" rx="2" fill="#faf8f3"/>
+        <text x="876" y="187" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RUN</text>
+
+        <!-- Node: cli.py (focal) -->
+        <rect x="392" y="96" width="176" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="392" y="96" width="176" height="64" rx="6" fill="#0f766e" stroke="#0f766e" stroke-width="1" fill-opacity="0.08"/>
+        <rect x="400" y="104" width="36" height="12" rx="2" fill="none" stroke="#0f766e" stroke-width="0.8" stroke-opacity="0.50"/>
+        <text x="418" y="113" fill="#0f766e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">ENTRY</text>
+        <text x="480" y="134" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">cli.py</text>
+        <text x="480" y="150" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">args · loop · compare · csv</text>
+
+        <!-- Node: metrics.py -->
+        <rect x="64" y="240" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="64" y="240" width="136" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="72" y="248" width="28" height="12" rx="2" fill="none" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.40"/>
+        <text x="86" y="257" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOD</text>
+        <text x="132" y="278" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">metrics.py</text>
+        <text x="132" y="294" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">summarize()</text>
+
+        <!-- Node: dashboard.py -->
+        <rect x="232" y="240" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="232" y="240" width="136" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="240" y="248" width="28" height="12" rx="2" fill="none" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.40"/>
+        <text x="254" y="257" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOD</text>
+        <text x="300" y="278" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">dashboard.py</text>
+        <text x="300" y="294" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">render()</text>
+
+        <!-- Node: controllers.py -->
+        <rect x="400" y="240" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="400" y="240" width="136" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="408" y="248" width="28" height="12" rx="2" fill="none" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.40"/>
+        <text x="422" y="257" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOD</text>
+        <text x="468" y="278" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">controllers.py</text>
+        <text x="468" y="294" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">BangBang · PWM · PID</text>
+
+        <!-- Node: motor.py -->
+        <rect x="568" y="240" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="568" y="240" width="136" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="576" y="248" width="28" height="12" rx="2" fill="none" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.40"/>
+        <text x="590" y="257" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOD</text>
+        <text x="636" y="278" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">motor.py</text>
+        <text x="636" y="294" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">DCMotor, 24 V limit</text>
+
+        <!-- Node: sim.py (store / physics state) -->
+        <rect x="568" y="384" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="568" y="384" width="136" height="64" rx="6" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <rect x="576" y="392" width="28" height="12" rx="2" fill="none" stroke="#5c6670" stroke-width="0.8" stroke-opacity="0.50"/>
+        <text x="590" y="401" fill="#5c6670" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SIM</text>
+        <text x="636" y="422" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">sim.py</text>
+        <text x="636" y="438" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Conveyor, PyBullet</text>
+
+        <!-- Node: report/figures.py (external to the package) -->
+        <rect x="784" y="240" width="136" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="784" y="240" width="136" height="64" rx="6" fill="#22272e" stroke="#22272e" stroke-width="1" fill-opacity="0.03" stroke-opacity="0.30"/>
+        <rect x="792" y="248" width="36" height="12" rx="2" fill="none" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.22"/>
+        <text x="810" y="257" fill="#566070" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SCRIPT</text>
+        <text x="852" y="278" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">figures.py</text>
+        <text x="852" y="294" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">experiments · plots</text>
+
+        <!-- Legend strip -->
+        <line x1="40" y1="540" x2="920" y2="540" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.10"/>
+        <text x="40" y="556" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+        <rect x="40" y="572" width="14" height="10" rx="2" fill="#0f766e" stroke="#0f766e" stroke-width="1" fill-opacity="0.08"/>
+        <text x="60" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Entry point</text>
+        <rect x="160" y="572" width="14" height="10" rx="2" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="180" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Module</text>
+        <rect x="260" y="572" width="14" height="10" rx="2" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <text x="280" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Physics state</text>
+        <rect x="380" y="572" width="14" height="10" rx="2" fill="#22272e" stroke="#22272e" stroke-width="1" fill-opacity="0.03" stroke-opacity="0.30"/>
+        <text x="400" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Outside the package</text>
+        <line x1="528" y1="577" x2="556" y2="577" stroke="#5c6670" stroke-width="1.2" marker-end="url(#module-map-arrow)"/>
+        <text x="564" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Calls</text>
+        <line x1="620" y1="577" x2="648" y2="577" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#module-map-arrow)"/>
+        <text x="656" y="580" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Reuses the loop</text>
+      </svg>

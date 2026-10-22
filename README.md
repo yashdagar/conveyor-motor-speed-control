@@ -302,19 +302,19 @@ voltage    = clamp(kp · error + ki · integral + kd · derivative, 0, 24)
 
 ## How the pieces fit
 
-The three diagrams below are drawn by `report/diagrams.py` with [schemdraw](https://schemdraw.readthedocs.io/) and regenerated with the rest of the figures.
+The diagrams are hand-laid SVG in `report/diagrams/`, one HTML file per diagram, rasterised to the PNGs below. Open the HTML files for the vector versions.
 
 Control loop:
 
-![Control loop block diagram](report/figures/diagram_loop.png)
+![Control loop block diagram](report/figures/diagram_control-loop.png)
 
-Module architecture:
+Module map:
 
-![Module architecture](report/figures/diagram_architecture.png)
+![Module map](report/figures/diagram_module-map.png)
 
 One iteration of the loop in `cli.py`:
 
-![Simulation loop flowchart](report/figures/diagram_flow.png)
+![Simulation loop flowchart](report/figures/diagram_sim-loop.png)
 
 ## Project layout
 
@@ -331,7 +331,7 @@ conveyor-motor-speed-control/
 │   └── metrics.py          summarize() that turns a run log into the metric dict
 └── report/
     ├── figures.py          runs every experiment in the report and writes the PNGs
-    ├── diagrams.py         draws the block diagram, architecture and flowchart with schemdraw
+    ├── diagrams/           control-loop, module-map and sim-loop diagrams as HTML and SVG
     ├── figures/            generated plots and the PyBullet screenshot
     └── report.tex          the project report, built with tectonic
 ```
@@ -350,7 +350,6 @@ Windows:
 ```powershell
 uv sync --group report
 uv run python report/figures.py
-uv run python report/diagrams.py
 ```
 
 macOS:
@@ -358,7 +357,6 @@ macOS:
 ```sh
 CFLAGS="-Dfdopen=fdopen" uv sync --group report
 uv run python report/figures.py
-uv run python report/diagrams.py
 ```
 
 It takes about half a minute and writes to `report/figures/`:
@@ -372,7 +370,7 @@ It takes about half a minute and writes to `report/figures/`:
 - **openloop.png** the PyBullet plant against the analytical linear model for a 24 V step.
 - **bode.png** magnitude and phase of the voltage-to-speed transfer function.
 - **pybullet.png** a rendered view of the conveyor and boxes.
-- **diagram_loop.png, diagram_architecture.png, diagram_flow.png** the block diagram, module architecture and loop flowchart shown above, from `diagrams.py`.
+- **diagram_control-loop.png, diagram_module-map.png, diagram_sim-loop.png** the three diagrams shown above, rasterised from `report/diagrams/*.svg` with headless Chrome at 2x.
 
 The script also prints every metric that appears in the report's tables, so the numbers in the report can be regenerated from scratch.
 

@@ -9,7 +9,7 @@ dependencies = ["pybullet>=3.2.6"]
 conveyor = "conveyor.cli:main"
 
 [dependency-groups]
-report = ["matplotlib>=3.8", "schemdraw>=0.19"]
+report = ["matplotlib>=3.8"]
 
 [build-system]
 requires = ["hatchling"]
