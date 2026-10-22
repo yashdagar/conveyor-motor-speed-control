@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>One iteration of the simulation loop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #faf8f3;
+      --color-ink:     #22272e;
+      --color-muted:   #5c6670;
+      --color-accent:  #0f766e;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Flowchart · Diagram Design</p>
+    <h1>One iteration of the simulation loop</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 520" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="sim-loop-title sim-loop-desc">
+        <title id="sim-loop-title">One iteration of the simulation loop</title>
+        <desc id="sim-loop-desc">Flowchart of the run loop in cli.py: read the belt speed, ask the controller for a voltage, step the DC motor model, step the physics, log and redraw, then either loop back or compute the metrics and end.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5c6670"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0f766e"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1d4ed8"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#faf8f3"/>
+
+        <!-- Arrows first. Left column flows down at x=280, right column flows up at x=680. -->
+        <line x1="280" y1="96" x2="280" y2="128" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="280" y1="176" x2="280" y2="208" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="280" y1="256" x2="280" y2="288" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="280" y1="336" x2="280" y2="368" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="400" y1="392" x2="560" y2="392" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="680" y1="368" x2="680" y2="312" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="680" y1="232" x2="680" y2="176" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="680" y1="128" x2="680" y2="96" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <!-- NO: back across the middle into the right edge of "Read belt speed" -->
+        <path d="M 580,272 H 488 Q 480,272 480,264 V 160 Q 480,152 472,152 H 400"
+              fill="none" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+
+        <!-- Arrow labels -->
+        <rect x="408" y="372" width="52" height="12" rx="2" fill="#faf8f3"/>
+        <text x="434" y="381" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">LOG</text>
+        <rect x="688" y="198" width="24" height="12" rx="2" fill="#faf8f3"/>
+        <text x="700" y="207" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">YES</text>
+        <rect x="522" y="252" width="24" height="12" rx="2" fill="#faf8f3"/>
+        <text x="534" y="261" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.12em">NO</text>
+        <rect x="488" y="200" width="36" height="12" rx="2" fill="#faf8f3"/>
+        <text x="506" y="209" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">1 MS</text>
+
+        <!-- Start oval -->
+        <rect x="160" y="48" width="240" height="48" rx="20" fill="rgba(34,39,46,0.03)" stroke="rgba(34,39,46,0.30)" stroke-width="1"/>
+        <text x="280" y="70" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Start run</text>
+        <text x="280" y="84" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">Conveyor, DCMotor, controller</text>
+
+        <!-- Read -->
+        <rect x="160" y="128" width="240" height="48" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="280" y="150" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Read belt speed</text>
+        <text x="280" y="164" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">v = r·ω̄, ω from PyBullet</text>
+
+        <!-- Controller (focal) -->
+        <rect x="160" y="208" width="240" height="48" rx="6" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+        <text x="280" y="230" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Controller update</text>
+        <text x="280" y="244" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">V = update(v*, v, dt)</text>
+
+        <!-- Motor -->
+        <rect x="160" y="288" width="240" height="48" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="280" y="310" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">DC motor step</text>
+        <text x="280" y="324" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">i += dt·(V − R·i − Ke·ω)/L, τ = Kt·i</text>
+
+        <!-- Physics -->
+        <rect x="160" y="368" width="240" height="48" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="280" y="390" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Step the physics</text>
+        <text x="280" y="404" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">τ/N − b·ω per roller, spawn/recycle boxes</text>
+
+        <!-- Log and dashboard -->
+        <rect x="560" y="368" width="240" height="48" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="680" y="390" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Log and dashboard</text>
+        <text x="680" y="404" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">(t, v, V, i, τ), redraw every 0.1 s</text>
+
+        <!-- Decision -->
+        <polygon points="680,232 780,272 680,312 580,272" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="680" y="270" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Duration reached</text>
+        <text x="680" y="284" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">or Ctrl+C?</text>
+
+        <!-- Metrics -->
+        <rect x="560" y="128" width="240" height="48" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="680" y="150" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Compute metrics</text>
+        <text x="680" y="164" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">rise, overshoot, error, ripple, dip</text>
+
+        <!-- End oval -->
+        <rect x="560" y="48" width="240" height="48" rx="20" fill="rgba(34,39,46,0.03)" stroke="rgba(34,39,46,0.30)" stroke-width="1"/>
+        <text x="680" y="70" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">End</text>
+        <text x="680" y="84" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">metrics printed, CSV written if asked</text>
+
+        <!-- Legend -->
+        <line x1="40" y1="460" x2="920" y2="460" stroke="rgba(34,39,46,0.10)" stroke-width="0.8"/>
+        <text x="40" y="476" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND · SHAPE CARRIES TYPE</text>
+
+        <rect x="40" y="492" width="24" height="12" rx="6" fill="rgba(34,39,46,0.03)" stroke="rgba(34,39,46,0.30)" stroke-width="1"/>
+        <text x="72" y="502" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Start / end (oval)</text>
+        <rect x="200" y="492" width="24" height="12" rx="2" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="232" y="502" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Step (rectangle)</text>
+        <polygon points="372,498 384,492 396,498 384,504" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="408" y="502" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Decision (diamond)</text>
+        <rect x="540" y="492" width="24" height="12" rx="2" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+        <text x="572" y="502" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Controller under test</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

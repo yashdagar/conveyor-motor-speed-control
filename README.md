@@ -302,49 +302,19 @@ voltage    = clamp(kp · error + ki · integral + kd · derivative, 0, 24)
 
 ## How the pieces fit
 
-```mermaid
-flowchart LR
-    CLI[cli.py<br/>parse args, main loop] -->|setpoint, speed, dt| C[controllers.py<br/>BangBang / PWM / PID]
-    C -->|voltage| M[motor.py<br/>DC motor: R, L, Kt, Ke, 24 V limit]
-    M -->|torque| S[sim.py<br/>PyBullet rollers + boxes]
-    S -->|speed, omega, boxes on belt| CLI
-    S -->|omega| M
-    CLI -->|every 0.1 s| D[dashboard.py<br/>terminal render]
-    CLI -->|at the end| X[metrics.py<br/>rise, overshoot, error, ripple, dip, recovery, switches]
-    CLI -.->|--log| CSV[(csv)]
-```
+The diagrams are hand-laid SVG in `report/diagrams/`, one HTML file per diagram, rasterised to the PNGs below. Open the HTML files for the vector versions.
+
+Control loop:
+
+![Control loop block diagram](report/figures/diagram_control-loop.png)
+
+Module map:
+
+![Module map](report/figures/diagram_module-map.png)
 
 One iteration of the loop in `cli.py`:
 
-```mermaid
-sequenceDiagram
-    participant L as loop
-    participant C as controller
-    participant M as DCMotor
-    participant S as Conveyor
-    participant D as dashboard
-    L->>S: speed(), omega()
-    S-->>L: v = r · mean(ω), ω
-    L->>C: update(setpoint, v, dt)
-    C-->>L: V
-    L->>M: step(V, ω, dt)
-    M-->>L: τ = Kt · i
-    L->>S: step(τ)
-    Note over S: τ/N - b·ω on each roller<br/>stepSimulation()<br/>spawn boxes at load_at<br/>recycle boxes past the end
-    L->>L: log (t, v, V, i, τ)
-    alt every 100th step
-        L->>D: render(...)
-    end
-```
-
-Control signal flow as a classic block diagram:
-
-```
- setpoint ──▶(+)──▶ controller ──▶ V (0..24 V) ──▶ DC motor ──▶ τ ──▶ rollers + boxes ──▶ belt speed v
-              ▲                                       ▲                                        │
-              │ -                                     └──────── back-EMF Ke·ω ◀────────────────┤
-              └────────────────────────────────────────────────────────────────────────────────┘
-```
+![Simulation loop flowchart](report/figures/diagram_sim-loop.png)
 
 ## Project layout
 
@@ -361,6 +331,7 @@ conveyor-motor-speed-control/
 │   └── metrics.py          summarize() that turns a run log into the metric dict
 └── report/
     ├── figures.py          runs every experiment in the report and writes the PNGs
+    ├── diagrams/           control-loop, module-map and sim-loop diagrams as HTML and SVG
     ├── figures/            generated plots and the PyBullet screenshot
     └── report.tex          the project report, built with tectonic
 ```
@@ -399,6 +370,7 @@ It takes about half a minute and writes to `report/figures/`:
 - **openloop.png** the PyBullet plant against the analytical linear model for a 24 V step.
 - **bode.png** magnitude and phase of the voltage-to-speed transfer function.
 - **pybullet.png** a rendered view of the conveyor and boxes.
+- **diagram_control-loop.png, diagram_module-map.png, diagram_sim-loop.png** the three diagrams shown above, rasterised from `report/diagrams/*.svg` with headless Chrome at 2x.
 
 The script also prints every metric that appears in the report's tables, so the numbers in the report can be regenerated from scratch.
 

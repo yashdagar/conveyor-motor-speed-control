@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Conveyor speed control loop</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --color-paper:   #faf8f3;
+      --color-ink:     #22272e;
+      --color-muted:   #5c6670;
+      --color-accent:  #0f766e;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace;
+    }
+    body {
+      font-family: var(--font-sans);
+      background: var(--color-paper);
+      color: var(--color-ink);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+    }
+    .frame { max-width: 1200px; width: 100%; min-width: 0; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      font-weight: 500;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--color-muted);
+      margin-bottom: 0.5rem;
+    }
+    h1 {
+      font-family: var(--font-serif);
+      font-size: clamp(1.5rem, 2.4vw + 0.75rem, 2rem);
+      font-weight: 400;
+      letter-spacing: -0.02em;
+      line-height: 1.15;
+      color: var(--color-ink);
+      margin-bottom: 1.5rem;
+    }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <p class="eyebrow">Architecture · Diagram Design</p>
+    <h1>Conveyor speed control loop</h1>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 440" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="control-loop-title control-loop-desc">
+        <title id="control-loop-title">Conveyor speed control loop</title>
+        <desc id="control-loop-desc">Block diagram of the belt speed loop: a swappable controller turns the speed error into a voltage command, the 24 volt limit saturates it, the DC motor converts it to torque, the PyBullet rollers and boxes respond, and the measured belt speed is fed back while back-EMF couples roller speed into the motor.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5c6670"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0f766e"/></marker>
+          <marker id="arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1d4ed8"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#faf8f3"/>
+
+        <!-- Arrows first -->
+        <line x1="136" y1="240" x2="164" y2="240" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="190" y1="240" x2="216" y2="240" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="368" y1="240" x2="400" y2="240" stroke="#0f766e" stroke-width="1.4" marker-end="url(#arrow-accent)"/>
+        <line x1="496" y1="240" x2="528" y2="240" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="656" y1="240" x2="688" y2="240" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <line x1="816" y1="240" x2="840" y2="240" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <!-- Feedback: sensor bottom, under the row, up into the summing point -->
+        <path d="M 880,272 V 328 Q 880,336 872,336 H 184 Q 176,336 176,328 V 256"
+              fill="none" stroke="#5c6670" stroke-width="1.2" marker-end="url(#arrow)"/>
+        <!-- Back-EMF: plant top, over the row, down into the motor (passive coupling) -->
+        <path d="M 752,208 V 168 Q 752,160 744,160 H 600 Q 592,160 592,168 V 206"
+              fill="none" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+
+        <!-- Arrow labels -->
+        <rect x="196" y="220" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="202" y="229" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">E</text>
+        <rect x="378" y="220" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="384" y="229" fill="#0f766e" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">U</text>
+        <rect x="506" y="220" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="512" y="229" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">V</text>
+        <rect x="666" y="220" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="672" y="229" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">τ</text>
+        <rect x="822" y="220" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="828" y="229" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">ω</text>
+        <rect x="186" y="258" width="12" height="12" rx="2" fill="#faf8f3"/>
+        <text x="192" y="267" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">−</text>
+        <rect x="498" y="316" width="60" height="12" rx="2" fill="#faf8f3"/>
+        <text x="528" y="325" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">FEEDBACK</text>
+        <rect x="644" y="140" width="56" height="12" rx="2" fill="#faf8f3"/>
+        <text x="672" y="149" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BACK-EMF</text>
+
+        <!-- Node: setpoint (input) -->
+        <rect x="40" y="208" width="96" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="40" y="208" width="96" height="64" rx="6" fill="rgba(92,102,112,0.10)" stroke="#566070" stroke-width="1"/>
+        <rect x="48" y="216" width="20" height="12" rx="2" fill="transparent" stroke="rgba(86,96,112,0.40)" stroke-width="0.8"/>
+        <text x="58" y="225" fill="#566070" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">IN</text>
+        <text x="88" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Setpoint</text>
+        <text x="88" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">v* m/s</text>
+
+        <!-- Summing point -->
+        <circle cx="176" cy="240" r="14" fill="#faf8f3"/>
+        <circle cx="176" cy="240" r="14" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="176" y="245" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">+</text>
+
+        <!-- Node: controller (focal) -->
+        <rect x="216" y="208" width="152" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="216" y="208" width="152" height="64" rx="6" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+        <rect x="224" y="216" width="32" height="12" rx="2" fill="transparent" stroke="rgba(15,118,110,0.50)" stroke-width="0.8"/>
+        <text x="240" y="225" fill="#0f766e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">CTRL</text>
+        <text x="292" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Controller</text>
+        <text x="292" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">bang-bang · PWM · PID</text>
+
+        <!-- Node: voltage limit -->
+        <rect x="400" y="208" width="96" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="400" y="208" width="96" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="408" y="216" width="28" height="12" rx="2" fill="transparent" stroke="rgba(34,39,46,0.40)" stroke-width="0.8"/>
+        <text x="422" y="225" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SAT</text>
+        <text x="448" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Limit</text>
+        <text x="448" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">0 .. 24 V</text>
+
+        <!-- Node: DC motor -->
+        <rect x="528" y="208" width="128" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="528" y="208" width="128" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="536" y="216" width="40" height="12" rx="2" fill="transparent" stroke="rgba(34,39,46,0.40)" stroke-width="0.8"/>
+        <text x="556" y="225" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOTOR</text>
+        <text x="592" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">DC motor</text>
+        <text x="592" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">R, L, Kt, Ke</text>
+
+        <!-- Node: rollers and boxes -->
+        <rect x="688" y="208" width="128" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="688" y="208" width="128" height="64" rx="6" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <rect x="696" y="216" width="40" height="12" rx="2" fill="transparent" stroke="rgba(34,39,46,0.40)" stroke-width="0.8"/>
+        <text x="716" y="225" fill="#22272e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">PLANT</text>
+        <text x="752" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Rollers + boxes</text>
+        <text x="752" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">PyBullet, 1 kHz</text>
+
+        <!-- Node: speed measurement (store / state) -->
+        <rect x="840" y="208" width="80" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="840" y="208" width="80" height="64" rx="6" fill="rgba(34,39,46,0.05)" stroke="#5c6670" stroke-width="1"/>
+        <rect x="848" y="216" width="36" height="12" rx="2" fill="transparent" stroke="rgba(92,102,112,0.50)" stroke-width="0.8"/>
+        <text x="866" y="225" fill="#5c6670" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">SENSE</text>
+        <text x="880" y="246" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">Speed</text>
+        <text x="880" y="262" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">v = r·ω̄</text>
+
+        <!-- Callout -->
+        <text x="752" y="302" fill="#5c6670" font-size="14" font-style="italic" font-family="'Instrument Serif', serif" text-anchor="middle">load boxes land here at --load-at seconds</text>
+
+        <!-- Legend strip -->
+        <line x1="40" y1="380" x2="920" y2="380" stroke="rgba(34,39,46,0.10)" stroke-width="0.8"/>
+        <text x="40" y="396" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+        <rect x="40" y="408" width="14" height="10" rx="2" fill="rgba(15,118,110,0.08)" stroke="#0f766e" stroke-width="1"/>
+        <text x="60" y="416" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Swappable controller</text>
+        <rect x="188" y="408" width="14" height="10" rx="2" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="208" y="416" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Model stage</text>
+        <rect x="300" y="408" width="14" height="10" rx="2" fill="rgba(34,39,46,0.05)" stroke="#5c6670" stroke-width="1"/>
+        <text x="320" y="416" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Measurement</text>
+        <rect x="412" y="408" width="14" height="10" rx="2" fill="rgba(92,102,112,0.10)" stroke="#566070" stroke-width="1"/>
+        <text x="432" y="416" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Input</text>
+        <line x1="488" y1="413" x2="516" y2="413" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow)"/>
+        <text x="524" y="416" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Passive coupling</text>
+        <text x="40" y="432" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.06em">E ERROR · U COMMAND · V VOLTAGE · τ TORQUE · ω ROLLER SPEED</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
