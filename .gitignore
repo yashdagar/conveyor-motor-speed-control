@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+*.csv
+dist/
+.python-version
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.lof
+report/*.lot
