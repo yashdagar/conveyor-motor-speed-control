@@ -507,7 +507,8 @@ Default setpoint & 0.5 m/s & 54 percent of top speed \\ \hline
 \textbf{How to run.} From a clone of the repository:
 \begin{small}
 \begin{verbatim}
-uv sync                          (macOS: CFLAGS="-Dfdopen=fdopen" uv sync)
+uv sync                                   (Windows)
+CFLAGS="-Dfdopen=fdopen" uv sync          (macOS)
 uv run conveyor pid --gui        (live dashboard plus 3D window)
 uv run conveyor bangbang --setpoint 0.3 --boxes 5
 uv run conveyor pwm --duration 5 --fast --log pwm.csv

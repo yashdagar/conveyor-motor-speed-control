@@ -50,15 +50,20 @@ Requirements:
 - [uv](https://docs.astral.sh/uv/) for the virtual environment and dependencies
 - A C and C++ compiler. PyBullet has no prebuilt wheel for most platforms and compiles from source on install, which takes a few minutes. On macOS install the Xcode command line tools (`xcode-select --install`). On Linux install `build-essential`.
 
-Clone and install:
+Clone:
 
 ```sh
 git clone https://github.com/yashdagar/conveyor-motor-speed-control.git
 cd conveyor-motor-speed-control
+```
+
+Install on Windows:
+
+```powershell
 uv sync
 ```
 
-On macOS with a recent Xcode the PyBullet build fails inside its bundled zlib with `error: expected identifier or '('` in `_stdio.h`. The bundled `zutil.h` redefines `fdopen` as `NULL` on macOS and the current SDK headers reject that. Predefine the macro so the redefinition is skipped:
+Install on macOS:
 
 ```sh
 CFLAGS="-Dfdopen=fdopen" uv sync
@@ -369,6 +374,15 @@ conveyor-motor-speed-control/
 
 The figures used in the report are generated, not drawn by hand. Install the extra dependency group and run the script:
 
+Windows:
+
+```powershell
+uv sync --group report
+uv run python report/figures.py
+```
+
+macOS:
+
 ```sh
 CFLAGS="-Dfdopen=fdopen" uv sync --group report
 uv run python report/figures.py
@@ -409,7 +423,7 @@ Use `--log` and `compare` together to check a change numerically rather than by 
 
 ## Troubleshooting
 
-- **PyBullet fails to build on macOS** with an error in `_stdio.h` or `zutil.h`: run `CFLAGS="-Dfdopen=fdopen" uv sync` as described under Setup.
+- **PyBullet fails to build on macOS**: use the macOS install command under Setup, not plain `uv sync`.
 - **`--gui` opens nothing or crashes on a remote or headless machine**: the GUI needs a display. Drop the flag and use the dashboard, the physics are identical.
 - **Dashboard flickers or shows stacked copies**: the terminal does not understand ANSI clear sequences. Any modern terminal (Terminal.app, iTerm, WezTerm, most Linux terminals) works.
 - **Speed never reaches the setpoint**: the setpoint is above the motor's top speed for the current load, about 0.92 m/s unloaded. Lower it.
