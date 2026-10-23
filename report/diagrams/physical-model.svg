@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 960 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="physical-model-title physical-model-desc" id="physical-model-root">
+        <title id="physical-model-title">The physical model</title>
+        <desc id="physical-model-desc">Side view of the simulated conveyor: ten rollers on one shaft driven by a DC motor, three one-kilogram boxes carried along by roller friction, and a box that leaves the last roller being reset to the start.</desc>
+        <defs>
+      <style>@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;family=Noto+Serif:ital@0;1&amp;family=Noto+Sans+KR:wght@400;500;600&amp;family=Noto+Serif+KR:wght@400&amp;family=Noto+Sans+TC:wght@400;500;600&amp;family=Noto+Serif+TC:wght@400&amp;display=swap');
+      #physical-model-root { --color-paper:   #faf8f3;
+      --color-ink:     #22272e;
+      --color-muted:   #5c6670;
+      --color-accent:  #0f766e;
+      --font-sans:     'Geist', system-ui, sans-serif;
+      --font-serif:    'Instrument Serif', serif;
+      --font-mono:     'Geist Mono', ui-monospace, monospace; }
+      #physical-model-root { font-family: var(--font-sans); color: var(--color-ink); }
+      #physical-model-root .diagram-container { width: 100%; overflow-x: auto; }
+      @media print {
+#physical-model-root .diagram-container { overflow-x: visible; }
+}</style>
+          <marker id="physical-model-arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#5c6670"/></marker>
+          <marker id="physical-model-arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#0f766e"/></marker>
+          <marker id="physical-model-arrow-link" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#1d4ed8"/></marker>
+        </defs>
+
+        <rect width="100%" height="100%" fill="#faf8f3"/>
+
+        <!-- Lines first: shaft, frame, recycle path, belt motion -->
+        <line x1="184" y1="300" x2="712" y2="300" stroke="#22272e" stroke-width="2"/>
+        <line x1="176" y1="324" x2="656" y2="324" stroke="#22272e" stroke-width="1" stroke-opacity="0.30"/>
+        <path d="M 656,268 V 168 Q 656,160 648,160 H 184 Q 176,160 176,168 V 212"
+              fill="none" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#physical-model-arrow)"/>
+        <line x1="232" y1="200" x2="312" y2="200" stroke="#0f766e" stroke-width="1.4" marker-end="url(#physical-model-arrow-accent)"/>
+
+        <!-- Line labels -->
+        <rect x="372" y="140" width="88" height="12" rx="2" fill="#faf8f3"/>
+        <text x="416" y="149" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">RESET TO START</text>
+        <rect x="236" y="180" width="72" height="12" rx="2" fill="#faf8f3"/>
+        <text x="272" y="189" fill="#0f766e" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">BELT SPEED</text>
+        <rect x="660" y="280" width="40" height="12" rx="2" fill="#faf8f3"/>
+        <text x="680" y="289" fill="#566070" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.06em">SHAFT</text>
+
+        <!-- Rollers: ten cylinders seen end-on, r = 5 cm, 12 cm pitch -->
+        <circle cx="200" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="248" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="296" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="344" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="392" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="440" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="488" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="536" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="584" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="632" cy="300" r="16" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <circle cx="200" cy="300" r="2" fill="#22272e"/>
+        <circle cx="248" cy="300" r="2" fill="#22272e"/>
+        <circle cx="296" cy="300" r="2" fill="#22272e"/>
+        <circle cx="344" cy="300" r="2" fill="#22272e"/>
+        <circle cx="392" cy="300" r="2" fill="#22272e"/>
+        <circle cx="440" cy="300" r="2" fill="#22272e"/>
+        <circle cx="488" cy="300" r="2" fill="#22272e"/>
+        <circle cx="536" cy="300" r="2" fill="#22272e"/>
+        <circle cx="584" cy="300" r="2" fill="#22272e"/>
+        <circle cx="632" cy="300" r="2" fill="#22272e"/>
+        <text x="200" y="344" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">0</text>
+        <text x="632" y="344" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" text-anchor="middle">9</text>
+        <text x="416" y="364" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">10 rollers · r 5 cm · pitch 12 cm · 2 kg each · friction b per bearing</text>
+
+        <!-- Load boxes resting on the rollers -->
+        <rect x="240" y="220" width="64" height="64" rx="2" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <text x="272" y="256" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">1 kg</text>
+        <rect x="384" y="220" width="64" height="64" rx="2" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <text x="416" y="256" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">1 kg</text>
+        <rect x="528" y="220" width="64" height="64" rx="2" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <text x="560" y="256" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">1 kg</text>
+
+        <!-- Node: DC motor (focal) -->
+        <rect x="712" y="268" width="152" height="64" rx="6" fill="#faf8f3"/>
+        <rect x="712" y="268" width="152" height="64" rx="6" fill="#0f766e" stroke="#0f766e" stroke-width="1" fill-opacity="0.08"/>
+        <rect x="720" y="276" width="40" height="12" rx="2" fill="none" stroke="#0f766e" stroke-width="0.8" stroke-opacity="0.50"/>
+        <text x="740" y="285" fill="#0f766e" font-size="7" font-family="'Geist Mono', monospace" text-anchor="middle" letter-spacing="0.08em">MOTOR</text>
+        <text x="788" y="306" fill="#22272e" font-size="12" font-weight="600" font-family="'Geist', sans-serif" text-anchor="middle">DC motor</text>
+        <text x="788" y="322" fill="#5c6670" font-size="9" font-family="'Geist Mono', monospace" text-anchor="middle">V → i → τ = Kt·i, 24 V max</text>
+
+        <!-- Callouts -->
+        <text x="40" y="408" fill="#22272e" font-size="14" font-style="italic" font-family="'Instrument Serif', serif">roller friction carries the box and loads the motor</text>
+        <path d="M 120,396 Q 120,240 236,240" fill="none" stroke="#22272e" stroke-width="1" stroke-dasharray="4,3" stroke-opacity="0.40"/>
+        <circle cx="240" cy="240" r="2" fill="#22272e"/>
+        <text x="920" y="120" fill="#22272e" font-size="14" font-style="italic" font-family="'Instrument Serif', serif" text-anchor="end">a box past the last roller is put back at the start, at rest</text>
+        <path d="M 820,128 Q 720,160 660,196" fill="none" stroke="#22272e" stroke-width="1" stroke-dasharray="4,3" stroke-opacity="0.40"/>
+        <circle cx="656" cy="200" r="2" fill="#22272e"/>
+
+        <!-- Legend strip -->
+        <line x1="40" y1="440" x2="920" y2="440" stroke="#22272e" stroke-width="0.8" stroke-opacity="0.10"/>
+        <text x="40" y="456" fill="#5c6670" font-size="8" font-family="'Geist Mono', monospace" letter-spacing="0.18em">LEGEND</text>
+
+        <rect x="40" y="468" width="14" height="10" rx="2" fill="#0f766e" stroke="#0f766e" stroke-width="1" fill-opacity="0.08"/>
+        <text x="60" y="476" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Drive</text>
+        <circle cx="127" cy="473" r="5" fill="#ffffff" stroke="#22272e" stroke-width="1"/>
+        <text x="140" y="476" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Roller on the shared shaft</text>
+        <rect x="292" y="468" width="10" height="10" rx="1" fill="#22272e" stroke="#5c6670" stroke-width="1" fill-opacity="0.05"/>
+        <text x="310" y="476" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Load box</text>
+        <line x1="380" y1="473" x2="408" y2="473" stroke="#0f766e" stroke-width="1.4" marker-end="url(#physical-model-arrow-accent)"/>
+        <text x="416" y="476" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Belt motion, +x</text>
+        <line x1="508" y1="473" x2="536" y2="473" stroke="#5c6670" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#physical-model-arrow)"/>
+        <text x="544" y="476" fill="#5c6670" font-size="8.5" font-family="'Geist', sans-serif">Box recycle</text>
+      </svg>
