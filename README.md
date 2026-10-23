@@ -189,21 +189,7 @@ How to read the table:
 
 ## The physical model
 
-```
-                 load boxes ride on the rollers, friction pulls them along +x
-                 ┌──────┐          ┌──────┐          ┌──────┐
-                 │      │          │      │          │      │
-   belt speed v  │  1kg │          │  1kg │          │  1kg │   box past the end
-   ───────────▶  └──────┘          └──────┘          └──────┘   is reset to x=0
-     ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )  ( )
-      0    1    2    3    4    5    6    7    8    9       10 rollers, r = 5 cm, 12 cm apart
-      └────┴────┴────┴────┴────┴────┴────┴────┴────┘
-                   one shaft, motor torque τ shared equally
-                              │
-                   ┌──────────┴──────────┐
-                   │   DC motor          │   V  ──▶ R, L, back-EMF Ke·ω ──▶ i ──▶ τ = Kt·i
-                   └─────────────────────┘
-```
+![Side view of the conveyor model](report/figures/diagram_physical-model.png)
 
 ### Motor
 
@@ -331,7 +317,7 @@ conveyor-motor-speed-control/
 │   └── metrics.py          summarize() that turns a run log into the metric dict
 └── report/
     ├── figures.py          runs every experiment in the report and writes the PNGs
-    ├── diagrams/           control-loop, module-map and sim-loop diagrams as HTML and SVG
+    ├── diagrams/           physical-model, control-loop, module-map and sim-loop diagrams as HTML and SVG
     ├── figures/            generated plots and the PyBullet screenshot
     └── report.tex          the project report, built with tectonic
 ```
@@ -370,7 +356,7 @@ It takes about half a minute and writes to `report/figures/`:
 - **openloop.png** the PyBullet plant against the analytical linear model for a 24 V step.
 - **bode.png** magnitude and phase of the voltage-to-speed transfer function.
 - **pybullet.png** a rendered view of the conveyor and boxes.
-- **diagram_control-loop.png, diagram_module-map.png, diagram_sim-loop.png** the three diagrams shown above, rasterised from `report/diagrams/*.svg` with headless Chrome at 2x.
+- **diagram_physical-model.png, diagram_control-loop.png, diagram_module-map.png, diagram_sim-loop.png** the four diagrams shown above, rasterised from `report/diagrams/*.svg` with headless Chrome at 2x.
 
 The script also prints every metric that appears in the report's tables, so the numbers in the report can be regenerated from scratch.
 
